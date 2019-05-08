@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { API } from "aws-amplify";
-import { FormGroup, FormControl, ControlLabel } from "react-bootstrap";
+import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 import LoaderButton from "../components/LoaderButton";
 import config from "../config";
 import "./NewDoor.css";
@@ -15,8 +15,14 @@ export default class NewDoor extends Component {
       isLoading: null,
       doorName: "",
       doorStatus: "closed",
-      piUrl: ""
+      popoverOpen: false
     };
+  }
+
+  toggle() {
+    this.setState({
+      popoverOpen: !this.state.popoverOpen
+    });
   }
 
   validateForm() {
@@ -42,7 +48,6 @@ export default class NewDoor extends Component {
       await this.createDoor({
         doorName: this.state.doorName,
         doorStatus: this.state.doorStatus,
-        piUrl: this.state.piUrl
       });
       this.props.history.push("/");
     } catch (e) {
@@ -62,11 +67,10 @@ export default class NewDoor extends Component {
     return (
       <div className="NewDoor">
         <div class="jumbotron">
-          <h3 class="display-1">Before you start</h3>
+          <h3 class="display-1">Before you submit:</h3>
             <li class="lead">Please make sure your Raspberry Pi is up and running and connected to the internet. </li>
-            <li class="lead">(First time setup only)You need to connect me to the same WiFi as your Raspberry Pi.</li>
-            <li class="lead">Take note of your Raspberry Pi IP address and port on which the garage door app runs.</li>
-            <li class="lead">Input the IP address and Port number below. e.g: "http://192.168.1.100:3333"</li>
+            <li class="lead">Make sure you start the listener script on your Raspberry Pi so that the app will automatically run upon doors created:</li>
+            <pre><code>nohup python3 /workspace/command_lister.py --username=$your_username &</code></pre>
         </div>
         <form onSubmit={this.handleSubmit}>
           <FormGroup controlId="doorName">
@@ -74,14 +78,6 @@ export default class NewDoor extends Component {
             <FormControl
               onChange={this.handleChange}
               value={this.state.doorName}
-              type="text"
-            />
-          </FormGroup>
-          <FormGroup controlId="piUrl">
-            <ControlLabel>Raspberry Pi URL</ControlLabel>
-            <FormControl
-              onChange={this.handleChange}
-              value={this.state.piUrl}
               type="text"
             />
           </FormGroup>

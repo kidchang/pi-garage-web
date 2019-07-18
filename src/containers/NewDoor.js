@@ -14,6 +14,7 @@ export default class NewDoor extends Component {
     this.state = {
       isLoading: null,
       doorName: "",
+      piUrl: "",
       doorStatus: "closed",
       popoverOpen: false
     };
@@ -51,8 +52,9 @@ export default class NewDoor extends Component {
       });
       this.props.history.push("/");
     } catch (e) {
-      alert(e);
+      alert("Only owners are allowed to create doors.");
       this.setState({ isLoading: false });
+      this.props.history.push("/");
     }
   }
 
@@ -78,6 +80,14 @@ export default class NewDoor extends Component {
             <FormControl
               onChange={this.handleChange}
               value={this.state.doorName}
+              type="text"
+            />
+          </FormGroup>
+          <FormGroup controlId="piUrl">
+            <ControlLabel>Raspberry Pi URL</ControlLabel>
+            <FormControl
+              onChange={this.handleChange}
+              value={this.state.piUrl}
               type="text"
             />
           </FormGroup>

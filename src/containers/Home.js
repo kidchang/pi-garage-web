@@ -20,7 +20,14 @@ export default class Home extends Component {
     }
 
     try {
-      const doors = await this.doors();
+      const role = localStorage.getItem('role');
+      console.log(role);
+      var doors;
+      if (role == 'security') {
+        doors = await this.adminDoors();
+      } else {
+        doors = await this.doors();
+      }
       this.setState({ doors });
     } catch (e) {
       alert(e);
@@ -33,9 +40,11 @@ export default class Home extends Component {
     return API.get("doors", "/doors");
   }
 
+  adminDoors() {
+    return API.get("doors", "/adminDoors")
+  }
 
   renderDoorsList(doors) {
-    console.log(doors);
     return [{}].concat(doors).map(
       (door, i) =>
         i !== 0

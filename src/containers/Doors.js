@@ -31,7 +31,8 @@ export default class Doors extends Component {
         doorStatus
       });
     } catch (e) {
-      alert(e);
+      alert("Only owners are allowed to operate this door.");
+      this.props.history.push("/");
     }
   }
 
@@ -44,7 +45,6 @@ export default class Doors extends Component {
   }
 
   getReversedDoorStatus() {
-    console.log(this.state.door.doorStatus);
     if (this.state.door.doorStatus == "closed") {
       return "OPEN";
     } else {
@@ -86,13 +86,13 @@ export default class Doors extends Component {
       });
       this.props.history.push("/");
     } catch (e) {
-      alert(e);
+      alert("Only owners are allowed to open/close doors");
       this.setState({ isLoading: false });
     }
   }
 
 
-  deleteNote() {
+  deleteDoor() {
     return API.del("doors", `/doors/${this.props.match.params.id}`);
   }
 
@@ -110,10 +110,10 @@ export default class Doors extends Component {
     this.setState({ isDeleting: true });
 
     try {
-      await this.deleteNote();
+      await this.deleteDoor();
       this.props.history.push("/");
     } catch (e) {
-      alert(e);
+      alert("Only owners are allowed to delete doors.");
       this.setState({ isDeleting: false });
     }
   }

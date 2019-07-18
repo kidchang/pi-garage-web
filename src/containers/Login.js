@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 import LoaderButton from "../components/LoaderButton";
-import { Auth } from "aws-amplify";
+import { Auth, Cache } from "aws-amplify";
 import { Link } from "react-router-dom";
 import "./Login.css";
 
@@ -33,6 +33,8 @@ export default class Login extends Component {
 
     try {
       await Auth.signIn(this.state.email, this.state.password);
+      const session = await Auth.currentSession();
+      localStorage.setItem('role', session.idToken.payload['custom:role']);
       this.props.userHasAuthenticated(true);
       this.props.history.push("/");
     } catch (e) {

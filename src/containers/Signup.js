@@ -3,7 +3,8 @@ import {
   HelpBlock,
   FormGroup,
   FormControl,
-  ControlLabel
+  ControlLabel,
+  Form
 } from "react-bootstrap";
 import LoaderButton from "../components/LoaderButton";
 import "./Signup.css";
@@ -20,6 +21,7 @@ export default class Signup extends Component {
       password: "",
       confirmPassword: "",
       confirmationCode: "",
+      role: "",
       newUser: null
     };
   }
@@ -50,8 +52,12 @@ export default class Signup extends Component {
     try {
       const newUser = await Auth.signUp({
         username: this.state.email,
-        password: this.state.password
+        password: this.state.password,
+        attributes: {
+          'custom:role': this.state.role
+        }
       });
+      localStorage.setItem('role', this.state.role);
       this.setState({
         newUser
       });
@@ -133,6 +139,24 @@ export default class Signup extends Component {
             onChange={this.handleChange}
             type="password"
           />
+        </FormGroup>
+        <FormGroup controlId="role" bsSize="large">
+          <ControlLabel>I am an...</ControlLabel>
+          <FormControl
+            value={this.state.role}
+            name="roles"
+            componentClass="select"
+            onChange={this.handleChange}>
+            <option value="default">
+              ------
+            </option>
+            <option value="owner">
+              Home Owner
+            </option>
+            <option value="security">
+              Security Officer
+            </option>
+          </FormControl>
         </FormGroup>
         <LoaderButton
           block
